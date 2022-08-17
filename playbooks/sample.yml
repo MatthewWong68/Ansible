@@ -1,0 +1,22 @@
+---
+- name: Setup aws on Ubuntu
+  hosts: sample
+  gather_facts: false
+  tasks:
+    - name: Install AWS CLI
+      block:
+        - name: Download the installer
+          shell:
+            cmd: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+        - name: Unzip the installer
+          shell:
+            cmd: unzip awscliv2.zip
+
+        - name: Run the install program
+          shell:
+            cmd: sudo ./aws/install
+
+        - name: Remove the installer after installing
+          shell:
+            cmd: rm awscliv2.zip
