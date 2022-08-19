@@ -3,6 +3,10 @@
   hosts: sample
   gather_facts: false
   tasks:
+    - name: Install unzip utility
+      shell:
+        cmd: sudo apt-get install unzip
+
     - name: Install AWS CLI
       block:
         - name: Download the installer
