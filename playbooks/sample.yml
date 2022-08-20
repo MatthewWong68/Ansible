@@ -2,7 +2,19 @@
 - name: Setup aws on Ubuntu
   hosts: sample
   gather_facts: false
+
+  vars:
+    identity_verification_expected_output: {
+      "UserId": "ABCCDEABCDEFGXXXYYYZZ",
+      "Account": "1233211234567",
+      "Arn": "arn:aws:iam::1233211234567:user/sample"
+    }
+
   tasks:
+    - name: Install unzip utility
+      shell:
+        cmd: sudo apt-get install unzip
+
     - name: Install AWS CLI
       block:
         - name: Download the installer
@@ -20,3 +32,13 @@
         - name: Remove the installer after installing
           shell:
             cmd: rm awscliv2.zip
+
+    - name: Getting IAM user/role details
+      shell:
+        cmd: aws sts get-caller-identity
+      register: verify
+
+    - name: Check if the IAM user/role details matches
+      debug:
+        msg: "Successfully verified!"
+      when: verify.stdout | from_json == identity_verification_expected_output
